@@ -1,48 +1,58 @@
-﻿
-CREATE TABLE "category" (
-    "cat_ids" char(4) UNIQUE NOT NULL,
-    "category" varchar(30)   NOT NULL,
-    "last_update" timestamp DEFAULT localtimestamp  NOT NULL
+﻿CREATE TABLE "category" (
+    "category_id" varchar(10)   NOT NULL,
+    "category" varchar(50)   NOT NULL,
+    "last_update" timestamp DEFAULT LOCALTIMESTAMP   NOT NULL,
+    CONSTRAINT "pk_category" PRIMARY KEY (
+        "category_id"
+     )
 );
 
 CREATE TABLE "subcategory" (
-    "sub_ids" varchar(8) UNIQUE  NOT NULL,
-    "subcategory" varchar(30)   NOT NULL,
-    "last_update" timestamp DEFAULT localtimestamp NOT NULL
+    "subcategory_id" varchar(10)   NOT NULL,
+    "subcategory" varchar(50)   NOT NULL,
+    "last_update" timestamp  DEFAULT LOCALTIMESTAMP  NOT NULL,
+    CONSTRAINT "pk_subcategory" PRIMARY KEY (
+        "subcategory_id"
+     )
 );
 
-CREATE TABLE "contact_info" (
-    "contact_id" serial UNIQUE  NOT NULL,
-    "firstname" varchar(30)   NOT NULL,
-    "lastname" varchar(30)   NOT NULL,
-    "email" varchar(50)   NOT NULL,
-    "last_update" timestamp DEFAULT localtimestamp NOT NULL
+CREATE TABLE "contacts" (
+    "contact_id" int   NOT NULL,
+    "firstname" varchar(50)   NOT NULL,
+    "lastname" varchar(50)   NOT NULL,
+    "email" varchar(100)   NOT NULL,
+    "last_update" timestamp DEFAULT LOCALTIMESTAMP   NOT NULL,
+    CONSTRAINT "pk_contacts" PRIMARY KEY (
+        "contact_id"
+     )
 );
 
 CREATE TABLE "campaign" (
     "cf_id" serial   NOT NULL,
     "contact_id" int   NOT NULL,
-    "cat_ids" char(4)   NOT NULL,
-    "sub_ids" varchar(8)   NOT NULL,
-    "company_name" varchar(60)   NOT NULL,
+    "company_name" varchar(100)   NOT NULL,
     "description" varchar(100)   NOT NULL,
-    "goal" int   NOT NULL,
-    "pledged" int   NOT NULL,
-    "outcome" varchar(30)   NOT NULL,
+    "goal" float   NOT NULL,
+    "pledged" float   NOT NULL,
+    "outcome" varchar(50)   NOT NULL,
     "backers_count" int   NOT NULL,
     "country" varchar(30)   NOT NULL,
     "currency" varchar(30)   NOT NULL,
-    "launch_date" timestamp  DEFAULT localtimestamp NOT NULL,
-    "end_date" timestamp  DEFAULT localtimestamp NOT NULL,
-    "last_update" timestamp  DEFAULT localtimestamp NOT NULL
+    "launch_date" timestamp   NOT NULL,
+    "end_date" timestamp   NOT NULL,
+    "category_id" varchar(10)   NOT NULL,
+    "subcategory_id" varchar(10)   NOT NULL,
+    "last_update" timestamp DEFAULT LOCALTIMESTAMP  NOT NULL,
+    CONSTRAINT "pk_campaign" PRIMARY KEY (
+        "cf_id"
+     )
 );
 
 ALTER TABLE "campaign" ADD CONSTRAINT "fk_campaign_contact_id" FOREIGN KEY("contact_id")
-REFERENCES "contact_info" ("contact_id");
+REFERENCES "contacts" ("contact_id");
 
-ALTER TABLE "campaign" ADD CONSTRAINT "fk_campaign_cat_ids" FOREIGN KEY("cat_ids")
-REFERENCES "category" ("cat_ids");
+ALTER TABLE "campaign" ADD CONSTRAINT "fk_campaign_category_id" FOREIGN KEY("category_id")
+REFERENCES "category" ("category_id");
 
-ALTER TABLE "campaign" ADD CONSTRAINT "fk_campaign_sub_ids" FOREIGN KEY("sub_ids")
-REFERENCES "subcategory" ("sub_ids");
-
+ALTER TABLE "campaign" ADD CONSTRAINT "fk_campaign_subcategory_id" FOREIGN KEY("subcategory_id")
+REFERENCES "subcategory" ("subcategory_id");
